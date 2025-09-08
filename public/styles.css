@@ -1,0 +1,136 @@
+:root {
+    --primary: #3498db;
+    --secondary: #2ecc71;
+    --dark: #2c3e50;
+    --light: #ecf0f1;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 6rem 0;
+    margin-bottom: 3rem;
+}
+
+.search-box {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hostel-card {
+    transition: transform 0.3s;
+    margin-bottom: 1.5rem;
+}
+
+.hostel-card:hover {
+    transform: translateY(-5px);
+}
+
+.hostel-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+.price {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.rating {
+    color: #f39c12;
+}
+
+/* Admin Dashboard Styles */
+.sidebar {
+    width: 250px;
+    background-color: var(--dark);
+    color: white;
+    position: fixed;
+    height: 100vh;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-menu a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 0.8rem 1rem;
+    display: block;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+    }
+    
+    .sidebar-header h3, .sidebar-menu span {
+        display: none;
+    }
+    
+    .main-content {
+        margin-left: 70px;
+    }
+    
+    .hero-section {
+        padding: 3rem 0;
+    }
+    
+    .search-box {
+        padding: 1rem;
+    }
+}
