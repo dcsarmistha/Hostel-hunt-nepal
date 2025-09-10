@@ -24,77 +24,77 @@ const importData = async () => {
     
     // Create regular user
     const regularUser = await User.create({
-      name: 'John Doe',
-      email: 'john@example.com',
+      name: 'Ram Sharma',
+      email: 'ram@example.com',
       password: 'password123',
       preferences: {
-        locations: ['New York', 'California'],
-        priceRange: { min: 20, max: 50 },
-        amenities: ['WiFi', 'Breakfast']
+        locations: ['Kathmandu', 'Lalitpur'],
+        priceRange: { min: 5000, max: 15000 },
+        amenities: ['WiFi', 'Hot Water']
       }
     });
     
-    // Create sample hostels
+    // Create Nepali hostels
     const hostels = [
       {
-        name: 'Urban Hub Hostel',
-        description: 'A modern hostel in the heart of the city with all amenities',
-        location: 'New York, USA',
+        name: 'Kathmandu Boys Hostel',
+        description: 'Affordable boys hostel with WiFi and 24/7 water supply.',
+        location: 'Kathmandu, Nepal',
         address: {
-          street: '123 Main St',
-          city: 'New York',
-          state: 'NY',
-          zipCode: '10001'
+          street: 'Thamel Marg',
+          city: 'Kathmandu',
+          state: 'Bagmati',
+          zipCode: '44600'
         },
-        price: 25,
+        price: 8000,
+        ratings: 4.5,
+        amenities: ['WiFi', 'Hot Water', 'Laundry'],
+        images: ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80'],
+        contactEmail: 'kathmanduboys@hostel.com',
+        contactPhone: '+977-9801234567',
+        createdBy: adminUser._id
+      },
+      {
+        name: 'Lalitpur Girls Hostel',
+        description: 'Secure and friendly environment for girls with mess facilities.',
+        location: 'Lalitpur, Nepal',
+        address: {
+          street: 'Jawalakhel Chowk',
+          city: 'Lalitpur',
+          state: 'Bagmati',
+          zipCode: '44700'
+        },
+        price: 10000,
         ratings: 4.7,
-        amenities: ['WiFi', 'Breakfast', 'Laundry', 'Common Room'],
-        images: ['https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'],
-        contactEmail: 'info@urbanhub.com',
-        contactPhone: '+1-123-456-7890',
+        amenities: ['WiFi', 'Mess', 'CCTV Security'],
+        images: ['https://images.unsplash.com/photo-1626221088423-07d43697c05e?auto=format&fit=crop&w=600&q=80'],
+        contactEmail: 'lalitpurgirls@hostel.com',
+        contactPhone: '+977-9812345678',
         createdBy: adminUser._id
       },
       {
-        name: 'Mountain View Hostel',
-        description: 'A cozy hostel with stunning mountain views',
-        location: 'Denver, USA',
+        name: 'Baneshwor Student Hostel',
+        description: 'Co-ed hostel in New Baneshwor with study-friendly environment.',
+        location: 'Kathmandu, Nepal',
         address: {
-          street: '456 Mountain Rd',
-          city: 'Denver',
-          state: 'CO',
-          zipCode: '80202'
+          street: 'New Baneshwor',
+          city: 'Kathmandu',
+          state: 'Bagmati',
+          zipCode: '44616'
         },
-        price: 18,
-        ratings: 4.3,
-        amenities: ['Parking', 'Common Room', 'Kitchen', 'Garden'],
-        images: ['https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'],
-        contactEmail: 'stay@mountainview.com',
-        contactPhone: '+1-234-567-8901',
-        createdBy: adminUser._id
-      },
-      {
-        name: 'Beachside Hostel',
-        description: 'Relaxing hostel just steps from the beach',
-        location: 'Miami, USA',
-        address: {
-          street: '789 Beach Ave',
-          city: 'Miami',
-          state: 'FL',
-          zipCode: '33101'
-        },
-        price: 30,
-        ratings: 4.9,
-        amenities: ['WiFi', 'Breakfast', 'Swimming Pool', 'Beach Access'],
-        images: ['https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'],
-        contactEmail: 'hello@beachside.com',
-        contactPhone: '+1-345-678-9012',
+        price: 12000,
+        ratings: 4.8,
+        amenities: ['WiFi', 'Study Room', 'Cafeteria'],
+        images: ['https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=600&q=80'],
+        contactEmail: 'baneshworhostel@hostel.com',
+        contactPhone: '+977-9823456789',
         createdBy: adminUser._id
       }
     ];
     
     await Hostel.insertMany(hostels);
     
-    console.log('Data imported successfully');
+    console.log('Nepali data imported successfully ✅');
     process.exit();
   } catch (error) {
     console.error('Error importing data:', error);
