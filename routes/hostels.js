@@ -32,16 +32,25 @@ router.get('/:id', protect, async (req, res) => {
 });
 
 // ✅ Add hostel (admin only)
+// ✅ Add hostel (admin only) - UPDATED VERSION
 router.post('/', protect, async (req, res) => {
   try {
     if (!req.user || req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Admins only' });
     }
 
-    const hostel = new Hostel(req.body);
+    // Set default values for required fields if not provided
+    const hostelData = {
+      ...req.body,
+      createdBy: req.user._id, // Set the creator from authenticated user
+      description: req.body.description || 'No description provided' // Default description
+    };
+
+    const hostel = new Hostel(hostelData);
     await hostel.save();
     res.status(201).json(hostel);
   } catch (err) {
+    console.error('Error adding hostel:', err);
     res.status(400).json({ message: 'Error adding hostel', error: err.message });
   }
 });

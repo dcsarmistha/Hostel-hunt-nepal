@@ -52,14 +52,14 @@ async function loadHostels() {
 // Add new hostel
 document.getElementById('addHostelForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const newHostel = {
-    name: document.getElementById('hostelName').value,
-    location: document.getElementById('hostelLocation').value,
-    price: Number(document.getElementById('hostelPrice').value),
-    ratings: Number(document.getElementById('hostelRating').value),
-    images: document.getElementById('hostelImage').value ? [document.getElementById('hostelImage').value] : []
-  };
-
+ const newHostel = {
+  name: document.getElementById('hostelName').value,
+  description: document.getElementById('hostelDescription').value, // Added this line
+  location: document.getElementById('hostelLocation').value,
+  price: Number(document.getElementById('hostelPrice').value),
+  ratings: Number(document.getElementById('hostelRating').value),
+  images: document.getElementById('hostelImage').value ? [document.getElementById('hostelImage').value] : []
+};
   try {
     const res = await fetch(`${API_BASE}/api/hostels`, {
       method: 'POST',
