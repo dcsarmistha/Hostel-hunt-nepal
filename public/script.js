@@ -145,30 +145,34 @@ function createHostelCard(hostel) {
 }
 
 // Search hostels
+// Search hostels - UPDATED VERSION
 async function searchHostels() {
-    const location = document.getElementById('locationInput').value;
-    const minPrice = document.getElementById('minPriceInput').value;
-    const maxPrice = document.getElementById('maxPriceInput').value;
+    const city = document.getElementById('cityInput').value;
+    const priceRange = document.getElementById('priceRangeInput').value;
     const rating = document.getElementById('ratingInput').value;
 
-    let url = `${API_BASE}/api/hostels?`;
-    if (location) url += `location=${location}&`;
-    if (minPrice) url += `minPrice=${minPrice}&`;
-    if (maxPrice) url += `maxPrice=${maxPrice}&`;
-    if (rating) url += `minRating=${rating}&`;
+    // Build query parameters
+    const params = new URLSearchParams();
+    if (city) params.append('location', city);
+    if (priceRange) params.append('priceRange', priceRange);
+    if (rating) params.append('rating', rating);
 
     try {
-        const res = await fetch(url);
+        const res = await fetch(`${API_BASE}/api/hostels/search/filter?${params}`);
+        if (!res.ok) throw new Error('Search failed');
+        
         const hostels = await res.json();
         const container = document.getElementById('hostelsContainer');
         container.innerHTML = '';
+        
         if (!hostels.length) {
-            container.innerHTML = '<div class="col-12 text-center"><p>No hostels found.</p></div>';
+            container.innerHTML = '<div class="col-12 text-center"><p>No hostels found matching your criteria.</p></div>';
             return;
         }
+        
         hostels.forEach(h => container.appendChild(createHostelCard(h)));
     } catch (err) {
-        console.error(err);
+        console.error('Search error:', err);
         showAlert('Error searching hostels', 'danger');
     }
 }

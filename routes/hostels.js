@@ -86,5 +86,38 @@ router.delete('/:id', protect, async (req, res) => {
     res.status(500).json({ message: 'Error deleting hostel', error: err.message });
   }
 });
+// ✅ Search hostels with filters
+router.get('/search/filter', async (req, res) => {
+  try {
+    const { location, priceRange, rating } = req.query;
+    
+    let filter = { isActive: true };
+    
+    // Location filter
+    if (location) {
+      filter.location = { $regex: location, $options: 'i' };
+    }
+    
+    // Price range filter
+    if (priceRange) {
+      const [min, max] = priceRange.split('-').map(Number);
+      if (max) {
+        filter.price = { $gte: min, $lte: max };
+      } else {
+        filter.price = { $gte: min };
+      }
+    }
+    
+    // Rating filter
+    if (rating) {
+      filter.ratings = { $gte: parseFloat(rating) };
+    }
+    
+    const hostels = await Hostel.find(filter);
+    res.json(hostels);
+  } catch (err) {
+    res.status(500).json({ message: 'Error searching hostels', error: err.message });
+  }
+});
 
 module.exports = router;

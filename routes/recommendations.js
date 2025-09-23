@@ -6,56 +6,75 @@ const { protect } = require('../middleware/auth');
 
 /**
  * GET /api/recommendations
- * Returns recommended hostels for the logged-in user
+ * Returns recommended hostels for the logged-in user using content-based + collaborative filtering
  */
 router.get('/', protect, async (req, res) => {
     try {
-        const user = req.user;
+        const user = await User.findById(req.user._id).populate('viewedHostels');
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
         // --- 1. Content-based filtering ---
-        let contentFiltered = await Hostel.find({
-            location: { $regex: user.locationPreference || '', $options: 'i' },
-            price: { 
-                $gte: user.priceRange?.min || 0,
-                $lte: user.priceRange?.max || 10000
-            },
-            $or: [
-                { gender: user.gender },
-                { gender: 'co-ed' }
-            ],
-            isActive: true
-        });
+        let contentFilter = { isActive: true };
+        
+        // Use preferences from user model
+        if (user.preferences && user.preferences.locations && user.preferences.locations.length > 0) {
+            contentFilter.location = { 
+                $in: user.preferences.locations.map(loc => new RegExp(loc, 'i'))
+            };
+        }
+        
+        if (user.preferences && user.preferences.priceRange) {
+            contentFilter.price = { 
+                $gte: user.preferences.priceRange.min || 0,
+                $lte: user.preferences.priceRange.max || 10000
+            };
+        }
+
+        const contentFiltered = await Hostel.find(contentFilter);
 
         // --- 2. Collaborative filtering ---
-        // Find similar users by location and gender
+        let collaborativeHostels = [];
+        
+        // Find users with similar preferences
         const similarUsers = await User.find({
             _id: { $ne: user._id },
-            locationPreference: user.locationPreference,
-            gender: user.gender
-        });
+            'preferences.locations': { $in: user.preferences?.locations || [] }
+        }).populate('viewedHostels');
 
-        // Collect hostels viewed by similar users
-        let collabHostels = [];
-        similarUsers.forEach(simUser => {
-            if (simUser.viewedHostels && simUser.viewedHostels.length) {
-                collabHostels.push(...simUser.viewedHostels);
+        // Get hostels viewed by similar users
+        similarUsers.forEach(similarUser => {
+            if (similarUser.viewedHostels && similarUser.viewedHostels.length > 0) {
+                similarUser.viewedHostels.forEach(hostel => {
+                    // Only add if user hasn't viewed this hostel
+                    if (!user.viewedHostels.some(vh => vh._id.toString() === hostel._id.toString())) {
+                        collaborativeHostels.push(hostel);
+                    }
+                });
             }
         });
 
-        // Remove hostels the current user already viewed
-        collabHostels = collabHostels.filter(
-            h => !user.viewedHostels.includes(h.toString())
+        // Remove duplicates from collaborative results
+        collaborativeHostels = collaborativeHostels.filter((hostel, index, self) => 
+            index === self.findIndex(h => h._id.toString() === hostel._id.toString())
         );
 
-        // Fetch full hostel data for collaborative filtering
-        const collabFiltered = await Hostel.find({ _id: { $in: collabHostels }, isActive: true });
+        // --- 3. Merge results ---
+        const allRecommendations = [...contentFiltered, ...collaborativeHostels];
+        
+        // Remove duplicates and hostels user has already viewed
+        const uniqueHostels = allRecommendations.filter((hostel, index, self) => {
+            const isDuplicate = index !== self.findIndex(h => h._id.toString() === hostel._id.toString());
+            const alreadyViewed = user.viewedHostels.some(vh => vh._id.toString() === hostel._id.toString());
+            return !isDuplicate && !alreadyViewed;
+        });
 
-        // --- 3. Merge and remove duplicates ---
-        const merged = [...contentFiltered, ...collabFiltered];
-        const uniqueHostels = Array.from(new Set(merged.map(h => h._id.toString())))
-            .map(id => merged.find(h => h._id.toString() === id));
+        // Limit to 6 recommendations
+        const finalRecommendations = uniqueHostels.slice(0, 6);
 
-        res.json(uniqueHostels);
+        res.json(finalRecommendations);
     } catch (error) {
         console.error('Recommendation error:', error);
         res.status(500).json({ message: 'Server error', error: error.message });

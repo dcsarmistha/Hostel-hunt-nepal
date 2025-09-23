@@ -18,21 +18,23 @@ const importData = async () => {
     const adminUser = await User.create({
       name: 'Admin User',
       email: 'admin@hostel.com',
-      password: 'admin123',
+      password: 'admin@123',
       role: 'admin'
     });
     
     // Create regular user
-    const regularUser = await User.create({
-      name: 'Ram Sharma',
-      email: 'ram@example.com',
-      password: 'password123',
-      preferences: {
-        locations: ['Kathmandu', 'Lalitpur'],
-        priceRange: { min: 5000, max: 15000 },
-        amenities: ['WiFi', 'Hot Water']
-      }
-    });
+// Create regular user with proper preferences
+const regularUser = await User.create({
+  name: 'Ram Sharma',
+  email: 'ram@example.com',
+  password: 'password123',
+  preferences: {
+    locations: ['Kathmandu', 'Lalitpur'],
+    priceRange: { min: 5000, max: 15000 },
+    amenities: ['WiFi', 'Hot Water']
+  },
+  viewedHostels: [] // Initialize empty array
+});
     
     // Create Nepali hostels
     const hostels = [
