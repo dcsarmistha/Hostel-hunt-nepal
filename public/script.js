@@ -136,7 +136,7 @@ function createHostelCard(hostel) {
             <div class="card-body">
                 <h5 class="card-title">${hostel.name}</h5>
                 <p class="card-text">${hostel.location}</p>
-                <p class="price">$NPR{hostel.price}</p>
+                <p class="price">Npr${hostel.price}</p>
                 <p class="rating">${'★'.repeat(Math.floor(hostel.ratings))}${'☆'.repeat(5-Math.floor(hostel.ratings))} (${hostel.ratings})</p>
             </div>
         </div>
